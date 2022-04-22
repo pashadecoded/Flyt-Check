@@ -7,6 +7,9 @@ $USRPRL = $env:USERPROFILE
 $JAVAENV = $env:JAVA_HOME
 $RPAENV = $env:ASGRPAInstallFolder
 
+# Add-MpPreference -ExclusionProcess "$Env:ProgramFiles\containerd\containerd.exe"
+
+
 $NODEPATH = "$env:USERPROFILE\AppData\Roaming\npm\node_modulesa"
 $NODEPATH2 = "C:\ProgramData\npm\node_modules"
 
