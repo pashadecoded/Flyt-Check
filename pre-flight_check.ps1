@@ -1,7 +1,8 @@
 write-host "`n-------------------------------------------"
 write-host "    ## Gathering System Resources ##"
 write-host "-------------------------------------------`n"
-
+function Out-Default {}
+$ErrorActionPreference = "SilentlyContinue"
 $OGPATH = Get-Location   
 $USRPRL = $env:USERPROFILE
 $JAVAENV = $env:JAVA_HOME
@@ -13,14 +14,16 @@ $RPAENV = $env:ASGRPAInstallFolder
 $NODEPATH = "$env:USERPROFILE\AppData\Roaming\npm\node_modules"
 $NODEPATH2 = "C:\ProgramData\npm\node_modules"
 
-if (GET-command $NODEPATH2 -errorAction SilentlyContinue) {
+if ($NODEPATH2) {
     cd $NODEPATH2
+    $path = $NODEPATH2
 }
-elseif (GET-command $NODEPATH -errorAction SilentlyContinue) {
+else {
     cd $NODEPATH
+    $path = $NODEPATH
 }
 
-
+#write-host "$path"
 
 $pcinfo = Get-ComputerInfo -Property CsProcessors, CsNumberOfLogicalProcessors, OsName, OsVersion, CsTotalPhysicalMemory
 
@@ -60,22 +63,15 @@ write-host "`n-------------------------------------------"
 write-host "    ## Checking nodejs ##"
 write-host "-------------------------------------------`n"
 
-if (Get-Command node -errorAction SilentlyContinue) {
-    $node_version = (node -v)
-    $npm_version = (npm -v)
-    $npm_command = (npm ls -g --depth=0) | where { $_ -ne "" }
-    $npm_trim = $npm_command.replace('+--', '').replace('`--', '') 
+$node_version = (node -v)
+$npm_version = (npm -v)
+$npm_command = (npm ls --depth=0 --silent) | where { $_ -ne "" }
+$npm_trim = $npm_command.replace('+--', '').replace('`--', '')      
+$angular = ($npm_trim | Out-String -Stream | Select-String -Pattern "@angular/cli").ToString().Trim()
+$rimraf = ($npm_trim | Out-String -Stream | Select-String -Pattern "rimraf").ToString().Trim()
 
-    if (Get-Command ng -errorAction SilentlyContinue) {
-        $angular = ($npm_trim | Out-String -Stream | Select-String -Pattern "@angular/cli").ToString().Trim()
-        
-    } 
 
-    if (Get-Command rimraf -errorAction SilentlyContinue) {
-        
-        $rimraf = ($npm_trim | Out-String -Stream | Select-String -Pattern "rimraf").ToString().Trim()
-    } 
-}
+       
 
 if ($node_version) {
 
@@ -157,8 +153,9 @@ write-host "-------------------------------------------`n"
 
 
 $software = "3.1.101"
-#$installed1 = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software1 }) -ne $null
+
 $installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -match $software }) | select  DisplayName, DisplayVersion, InstallDate, Version
+    
 If (-Not $installed) {
     Write-Host "    Microsoft .NET Core 3.1.101 (x64) is not installed`n"
 }
@@ -180,9 +177,8 @@ else {
 
 $software = "Microsoft Access database engine 2010 (English)"
 $installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) | select  DisplayName, DisplayVersion, InstallDate, Version
+    
 #$installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) -ne $null
-#Microsoft Access database engine 2010 (English)
-
 #$installed = (Get-WmiObject -Class Win32_Product | where vendor -eq $software | select Name, Version
 
 If ($installed) {
