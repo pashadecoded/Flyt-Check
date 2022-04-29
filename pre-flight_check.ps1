@@ -55,7 +55,7 @@ if ($JAVAENV) {
 
 
 
-### nodejs version check ASG
+### nodejs version check 
 write-host "`n-------------------------------------------"
 write-host "    ## Checking nodejs ##"
 write-host "-------------------------------------------`n"
@@ -89,7 +89,7 @@ if ($node_version) {
         
     }
 
-    ### nodejs version check ASG
+    ### nodejs version check
     write-host "`n-------------------------------------------"
     write-host "    ## Checking node modules ##"
     write-host "-------------------------------------------`n"
@@ -185,19 +185,19 @@ else {
     Write-Host "    Microsoft Access database engine 2010 is not installed`n"
 }
 
-$software = "Java 8"
-$installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -match $software }) | select  DisplayName, DisplayVersion, InstallDate, Version
-If ($installed) {
+    # $software = "Java 8"
+    # $installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -match $software }) | select  DisplayName, DisplayVersion, InstallDate, Version
+    # If ($installed) {
 
-    $version = $installed.DisplayVersion
-    Write-Host "    Java v$version is installed`n"
-    
-}
-else {
-    
-                
-    Write-Host "    Java is not installed`n"
-}
+    #     $version = $installed.DisplayVersion
+    #     Write-Host "    Java v$version is installed`n"
+        
+    # }
+    # else {
+        
+                    
+    #     Write-Host "    Java is not installed`n"
+    # }
 
 
 write-host "-------------------------------------------"
