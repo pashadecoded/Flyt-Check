@@ -1,15 +1,18 @@
-write-host "`n-------------------------------------------"
+write-host "-------------------------------------------"
 write-host "    ## Gathering System Resources ##"
 write-host "-------------------------------------------`n"
 function Out-Default {}
 $ErrorActionPreference = "SilentlyContinue"
+$ProgressPreference = "SilentlyContinue" 
+$host.UI.RawUI.WindowTitle = “Pre-Flyt_Check”
+
+
 $OGPATH = Get-Location   
 $USRPRL = $env:USERPROFILE
 $JAVAENV = $env:JAVA_HOME
 $RPAENV = $env:ASGRPAInstallFolder
 
 # Add-MpPreference -ExclusionProcess "$Env:ProgramFiles\containerd\containerd.exe"
-
 
 $NODEPATH = "$env:USERPROFILE\AppData\Roaming\npm\node_modules"
 $NODEPATH2 = "C:\ProgramData\npm\node_modules"
@@ -23,26 +26,22 @@ else {
     $path = $NODEPATH
 }
 
-#write-host "$path"
-
 $pcinfo = Get-ComputerInfo -Property CsProcessors, CsNumberOfLogicalProcessors, OsName, OsVersion, CsTotalPhysicalMemory
-
 
 $cpu = ($pcinfo | Out-String -Stream | Select-String -Pattern "CsProcessors").ToString().Trim()
 write-host "    $cpu"
+
 $ncpu = ($pcinfo | Out-String -Stream | Select-String -Pattern "CsNumberOfLogicalProcessors").ToString().Trim()
 write-host "    $ncpu"
 
 $os = ($pcinfo | Out-String -Stream | Select-String -Pattern "OSName").ToString().Trim()
 write-host "    $os"
+
 $build = ($pcinfo | Out-String -Stream | Select-String -Pattern "OsVersion").ToString().Trim()
 write-host "    $build"
+
 $ram = (systeminfo | Select-String 'Total Physical Memory:').ToString().Split(':')[1].Trim()
-
 write-host "    Total Physical Memory       : $ram"
-
-
-
 
 
 if ($JAVAENV) {
@@ -50,13 +49,9 @@ if ($JAVAENV) {
     write-host "`n-------------------------------------------"
     write-host "    ## Checking Env_Variables ##"
     write-host "-------------------------------------------`n"
-
-
     write-host "    Java_Home: $JAVAENV`n" 
     write-host "    ASGRPAInstallFolder: $RPAENV"
 }
-
-
 
 ### nodejs version check 
 write-host "`n-------------------------------------------"
@@ -65,13 +60,13 @@ write-host "-------------------------------------------`n"
 
 $node_version = (node -v)
 $npm_version = (npm -v)
-$npm_command = (npm ls --depth=0 --silent) | where { $_ -ne "" }
+$npm_command = (npm ls --depth=0 -s) | where { $_ -ne "" }
+$host.UI.RawUI.WindowTitle = “Pre-Flyt_Check”
+
 $npm_trim = $npm_command.replace('+--', '').replace('`--', '')      
 $angular = ($npm_trim | Out-String -Stream | Select-String -Pattern "@angular/cli").ToString().Trim()
 $rimraf = ($npm_trim | Out-String -Stream | Select-String -Pattern "rimraf").ToString().Trim()
 
-
-       
 
 if ($node_version) {
 
