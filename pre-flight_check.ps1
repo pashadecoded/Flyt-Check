@@ -10,7 +10,7 @@ $RPAENV = $env:ASGRPAInstallFolder
 # Add-MpPreference -ExclusionProcess "$Env:ProgramFiles\containerd\containerd.exe"
 
 
-$NODEPATH = "$env:USERPROFILE\AppData\Roaming\npm\node_modulesa"
+$NODEPATH = "$env:USERPROFILE\AppData\Roaming\npm\node_modules"
 $NODEPATH2 = "C:\ProgramData\npm\node_modules"
 
 if (GET-command $NODEPATH2 -errorAction SilentlyContinue) {
@@ -64,20 +64,27 @@ if (Get-Command node -errorAction SilentlyContinue) {
     $node_version = (node -v)
     $npm_version = (npm -v)
     $npm_command = (npm ls -g --depth=0) | where { $_ -ne "" }
-    $npm_trim = $npm_command.replace('+--', '').replace('`--', '')
-    $angular = ($npm_trim | Out-String -Stream | Select-String -Pattern "@angular/cli@8.0.0").ToString().Trim()
-    $rimraf = ($npm_trim | Out-String -Stream | Select-String -Pattern "rimraf@3.0.0").ToString().Trim()
+    $npm_trim = $npm_command.replace('+--', '').replace('`--', '') 
+
+    if (Get-Command ng -errorAction SilentlyContinue) {
+        $angular = ($npm_trim | Out-String -Stream | Select-String -Pattern "@angular/cli").ToString().Trim()
         
+    } 
+
+    if (Get-Command rimraf -errorAction SilentlyContinue) {
+        
+        $rimraf = ($npm_trim | Out-String -Stream | Select-String -Pattern "rimraf").ToString().Trim()
+    } 
 }
 
 if ($node_version) {
 
     if ($node_version -like "v12.0.0") {
-        write-host "    nodejs $node_version Is Installed"
+        write-host "    nodejs $node_version is installed"
         
     }
     else {
-        write-host "    nodejs $node_version Is Not Supported, Please Install nodejs v12.0.0"
+        write-host "    nodejs $node_version is not Supported, Please install nodejs v12.0.0"
     }
     
     write-host "`n-------------------------------------------"
@@ -85,8 +92,21 @@ if ($node_version) {
     write-host "-------------------------------------------`n"
 
     if ($node_version) {
-        write-host "    npm v$npm_version Is Installed"
+
         
+        if ($npm_version) {
+            if ($npm_version -like "6.9.0") {
+                write-host "    npm v$npm_version is installed"
+            }
+            else {
+                write-host "    npm v$npm_version is not Supported, Please install npm v6.9.0"
+            }
+        }
+        else {
+            write-host "    npm is not installed"
+        }
+
+
     }
 
     ### nodejs version check
@@ -96,14 +116,14 @@ if ($node_version) {
     
     if ($angular) {
         if ($angular -like "@angular/cli@8.0.0") {
-            write-host "    $angular is Installed`n"
+            write-host "    $angular is installed`n"
         }
         else {
-            write-host "    $angular Is Not Supported, Please Install @angular/cli@8.0.0`n"
+            write-host "    $angular is not Supported, Please Install @angular/cli@8.0.0`n"
         }
     }
     else {
-        write-host "    @angular/cli@8.0.0 not Installed in the System`n"
+        write-host "    @angular/cli is not installed`n"
     }
     
 
@@ -116,14 +136,14 @@ if ($node_version) {
         }
     }
     else {
-        write-host "    rimraf@3.0.0 Not Installed In the System"
+        write-host "    rimraf is not installed"
     }
 
 
 
 }
 else {
-    write-host "    Nodejs Is Not Installed In the System"
+    write-host "    Nodejs is not installed"
 }
 
 
@@ -134,15 +154,7 @@ write-host "    ## Checking Other Pre-requisites ##"
 write-host "-------------------------------------------`n"
 
 
-$software = "Zulu JDK 8.44.0.9 (8u242), 64-bit";
-$installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) -ne $null
 
-If (-Not $installed) {
-    Write-Host "    $software is not installed`n";
-}
-else {
-    Write-Host "    $software is installed`n";
-}
 
 $software = "3.1.101"
 #$installed1 = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software1 }) -ne $null
@@ -185,19 +197,29 @@ else {
     Write-Host "    Microsoft Access database engine 2010 is not installed`n"
 }
 
-    # $software = "Java 8"
-    # $installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -match $software }) | select  DisplayName, DisplayVersion, InstallDate, Version
-    # If ($installed) {
+$software = "Zulu JDK 8.44.0.9 (8u242), 64-bit";
+$installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -eq $software }) -ne $null
 
-    #     $version = $installed.DisplayVersion
-    #     Write-Host "    Java v$version is installed`n"
+If (-Not $installed) {
+    Write-Host "    $software is not installed`n";
+}
+else {
+    Write-Host "    $software is installed`n";
+}
+
+# $software = "Java 8"
+# $installed = (Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where { $_.DisplayName -match $software }) | select  DisplayName, DisplayVersion, InstallDate, Version
+# If ($installed) {
+
+#     $version = $installed.DisplayVersion
+#     Write-Host "    Java v$version is installed`n"
         
-    # }
-    # else {
+# }
+# else {
         
                     
-    #     Write-Host "    Java is not installed`n"
-    # }
+#     Write-Host "    Java is not installed`n"
+# }
 
 
 write-host "-------------------------------------------"
