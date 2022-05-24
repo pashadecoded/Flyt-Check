@@ -9,16 +9,8 @@ function WriteLog {
     Add-content $logfile -value $LogMessage
 }
 
-write-host "lllllllll lllllllll Flyt-Check"
-write-host "lllllllll lllllllll"
-write-host "lllllllll lllllllll"
-write-host "lllllllll lllllllll"
-write-host "lllllllll lllllllll"
-write-host "`nlllllllll lllllllll"
-write-host "lllllllll lllllllll"
-write-host "lllllllll lllllllll"
-write-host "lllllllll lllllllll"
-write-host "lllllllll lllllllll"
+write-host "`nFlyt-Check"
+
 Write-host "`nGathering Info, Please Wait."
 
 
