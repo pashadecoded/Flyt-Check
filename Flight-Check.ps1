@@ -72,9 +72,7 @@ $nodeversion = $node.DisplayVersion
 
 $npm_version = (npm -v)
      
-$angular = ($npm_trim | Out-String -Stream | Select-String -Pattern "@angular/cli").ToString().Trim()
-$rimraf = ($npm_trim | Out-String -Stream | Select-String -Pattern "rimraf").ToString().Trim()
-$host.UI.RawUI.WindowTitle = “Pre-Flyt_Check”
+
 
 if ($nodeversion) {
 
@@ -122,6 +120,10 @@ if ($nodeversion) {
     WriteLog "`n-------------------------------------------"
     WriteLog "## Node Modules ##"
     WriteLog "-------------------------------------------`n"
+   
+    $angular = ($npm_trim | Out-String -Stream | Select-String -Pattern "@angular/cli").ToString().Trim()
+    $rimraf = ($npm_trim | Out-String -Stream | Select-String -Pattern "rimraf").ToString().Trim()
+    $host.UI.RawUI.WindowTitle = “Pre-Flyt_Check”
     
     if ($angular) {
         
