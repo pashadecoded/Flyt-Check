@@ -47,7 +47,7 @@ WriteLog "Build     : $osver"
 WriteLog "Type      : $ostype"
 
 if ($JAVAENV) {
-    write-host "`n## Checking Env_Variable ##"
+    
     WriteLog "`n-------------------------------------------"
     WriteLog "## Env_Variables ##"
     WriteLog "-------------------------------------------`n"
